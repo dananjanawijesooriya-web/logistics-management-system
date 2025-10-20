@@ -7,6 +7,7 @@ package logistics.management.system;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+    
 /**
  *
  * @author dhana
@@ -73,21 +74,44 @@ public class LogisticsManagementSystem {
         }
 
         private static void renameCity() {
+            
+            System.out.println("Enter the index of city to rename: ");
+            int index=input.nextInt();
+            input.nextLine();
+            if(index >= 0 && index < cities.size()){
+               System.out.print("Enter the new name of city: ");
+               String newCityname=input.nextLine();
+               cities.remove(index);
+               cities.add(index,newCityname);
+            }
 
         }
 
         private static void removeCity() {
+            
+            System.out.println("Enter the index of city to remove: ");
+            int index=input.nextInt();
+            if(index >= 0 && index < cities.size()){
+                cities.remove(index);
+                System.out.println("City removed.");
+            }else{
+                System.out.println("Entered index is invalid.");}
+         }
 
         }
-
+        public ArrayList<String> getCities() {
+        return cities;
+        }
         
         
         private static ArrayList<String> cities;
         private static final int MAXNO_OFCITIES=30;
         cities = new ArrayList<>();
         private static final Scanner input = new Scanner(System.in);
+        public citymanager(){
+           cities=new ArrayList<>();}
         
-        private static void menu() {
+        public void menu() {
             System.out.println("\\n--- CITY MANAGEMENT ---");
             System.out.println("1.Add city");
             System.out.println("2.Rename city");
@@ -101,6 +125,7 @@ public class LogisticsManagementSystem {
                 case 1 -> addCity();
                 case 2 -> renameCity();
                 case 3 -> removeCity();
+                case 4 -> listofCities();
                 default -> System.out.println("Invalid option");
                
                
@@ -111,10 +136,8 @@ public class LogisticsManagementSystem {
             
         }
 
-        public citiesManager() {
-        }
-    }
-
+        
+    
      public class distanceManager {
 
         public distanceManager() {
