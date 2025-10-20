@@ -4,6 +4,7 @@
  */
 package logistics.management.system;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -54,23 +55,73 @@ public class LogisticsManagementSystem {
 
    
 
-    private static class citiesManager {
+    public class citiesManager {
 
+        private static void addCity() {
+            if(cities.size()>=MAXNO_OFCITIES){
+                System.out.println("City limit has reached.");
+                return;
+            }else{
+            System.out.print("Enter city name: ");
+            String name=input.nextLine();
+            }
+            if(cities.contains(name)){
+               System.out.println("This city already exist.");
+            }else{
+               cities.add(name);
+               System.out.println("City added.");}}
+        }
+
+        private static void renameCity() {
+
+        }
+
+        private static void removeCity() {
+
+        }
+
+        
+        
+        private static ArrayList<String> cities;
+        private static final int MAXNO_OFCITIES=30;
+        cities = new ArrayList<>();
+        private static final Scanner input = new Scanner(System.in);
+        
         private static void menu() {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            System.out.println("\\n--- CITY MANAGEMENT ---");
+            System.out.println("1.Add city");
+            System.out.println("2.Rename city");
+            System.out.println("3.Remove city");
+            System.out.println("Select an option:");
+            
+            int option;
+            option = input.nextInt();
+            
+            switch(option){
+                case 1 -> addCity();
+                case 2 -> renameCity();
+                case 3 -> removeCity();
+                default -> System.out.println("Invalid option");
+               
+               
+        
+                    
+            }
+            
+            
         }
 
         public citiesManager() {
         }
     }
 
-     private static class distanceManager {
+     public class distanceManager {
 
         public distanceManager() {
         }
     }
      
-    private static class vehicleManager {
+    public class vehicleManager {
 
         private static void displayVehicles() {
             throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -80,13 +131,13 @@ public class LogisticsManagementSystem {
         }
     }
 
-    private static class deliveryManager {
+    public class deliveryManager {
 
         public deliveryManager() {
         }
     }
 
-    private static class reportManager {
+    public class reportManager {
 
         private static void veiwReports() {
             throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -96,7 +147,7 @@ public class LogisticsManagementSystem {
         }
     }
 
-    private static class fileHandler {
+    public class fileHandler {
 
         private static void saveData() {
             throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
