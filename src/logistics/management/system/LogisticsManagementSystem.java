@@ -212,13 +212,36 @@ public class LogisticsManagementSystem {
                         }       System.out.println();
                        } break;
                     default:
-                        System.out.println("Invalid choice.");
+                        System.out.println("Invalid option.");
                      }
         
                    }
                 } 
-             }
-        
+            public class VehicleManager{
+            
+                private String[] vehicles={"Van","Track","Lorry"};
+                private int[] capacities={1000,5000,10000};
+                private double[] rates={30,40,80};
+                private double[] avgspeeds={60,50,45};
+                private double[] efficiencies={12,6,4};
+            
+                public void showVehicles(){
+                    System.out.println("\n====Vehicles====");
+                    System.out.println("Index\tType\tCapacity\tRate/km\tSpeed\tEfficiency");
+                    for(int p=0; p<vehicles.length; p++){
+                        System.out.println(p + "\t" + vehicles[p]+"\t"+capacities[p]+"\t"+rates[p]+"\t"+avgspeeds[p]+"\t"+efficiencies[p]);
+                         
+                    }
+                }
+                public int getCapacity(int index){return capacities[index];}
+                public double getRate(int index){return rates[index];}
+                public double getSpeed(int index){return avgspeeds[index];}
+                public double getEfficiency(int index){return efficiencies[index];}
+                public String getVehiclestype(int index){return vehicles[index];}
+              }
+            }
+             
+            
                 
             
         
