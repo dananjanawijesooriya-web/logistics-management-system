@@ -235,10 +235,53 @@ public class LogisticsManagementSystem {
                 }
                 public int getCapacity(int index){return capacities[index];}
                 public double getRate(int index){return rates[index];}
-                public double getSpeed(int index){return avgspeeds[index];}
+                public double getAvgspeed(int index){return avgspeeds[index];}
                 public double getEfficiency(int index){return efficiencies[index];}
                 public String getVehiclestype(int index){return vehicles[index];}
               }
+            
+            public class DeliveryManager{
+                
+                private final int MAX_DELIVERY=50;
+                private ArrayList<Delivery> deliveries;
+                private DistanceManager distanceManager;
+                private VehicleManager vehicleManager;
+                private final double fuel_price=310.0;
+                private Scanner input=new Scanner(System.in);
+                
+                public DeliveryManager(DistanceManager distanceManagerParam, VehicleManager vehicleManagerParam) {
+                    distanceManager = distanceManagerParam;
+                    vehicleManager = vehicleManagerParam;
+                    deliveries = new ArrayList<>();
+                }
+                public void deliveryHandle(CityManager cityManager){
+                    System.out.println("Enter source city index: ");
+                    int sci=input.nextInt();
+                    System.out.println("Enter destination city index: ");
+                    int dsi=input.nextInt();
+                    
+                    if(sci==dsi){
+                        System.out.println("Source city and destination city can't be same.");
+                        return;
+                    }
+                    vehicleManager.showVehicles();
+                    System.out.println("Choose vehicle index: ");
+                    int vehicleindex=input.nextInt();
+                    System.out.println("enter the weight(kg): ");
+                    double weight=input.nextInt();
+                    
+                    if(weight>vehicleManager.getCapacity(vehicleindex)){
+                        System.out.println("Weight exceeds vehicle capacity.");
+                        return;
+                    }
+                    int distance=distanceManager.getDistance(sci,dsi);
+                    double rate=vehicleManager.getRate(vehicleindex);
+                    double avgspeed=vehicleManager.getAvgspeed(vehicleindex);
+                    double efficiencies=vehicleManager.getEfficiency(vehicleindex);
+                    
+                    
+                }  
+            }
             }
              
             
