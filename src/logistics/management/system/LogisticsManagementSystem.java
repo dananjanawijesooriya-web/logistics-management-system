@@ -4,7 +4,7 @@
  */
 package logistics.management.system;
 
-import LogisticsManagementSystem.LogisticsManagementSystem.CityManager;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -160,7 +160,70 @@ public class LogisticsManagementSystem {
                 return cities;
     }
    }
-  }
+        public class DistanceManager{
+            public void menu(CityManager cityManager){
+               private int MAX_CITIES=30;
+               private int[][] distance=new int[ MAX_CITIES][ MAX_CITIES];
+               private Scanner input=new Scanner(System.in);
+            
+            for(int i=0; i<MAX_CITIES; i++){
+               for(int j=0; j<MAX_CITIES; j++){
+                  if(i==j){
+                     distance[i][j]=0;
+                  }else{
+                     distance[i][j]=-1;
+                  }
+                }}
+            while(true){
+                System.out.println("\n====Distance Manager====");
+                System.out.println("1.Disatance between 2 cities");
+                System.out.println("2.Show the distance table");
+                System.out.println("Choose an option");
+                int option=input.nextInt();
+            
+                switch(option){
+                    case 1:
+                       System.out.println("Enter the 1st city index(0 - "+(MAX_CITIES-1)+"):");
+                       int city1=input.nextInt();
+                       System.out.println("Enter the 2nd city index(0 - "+(MAX_CITIES-1)+"):");
+                       int city2=input.nextInt();
+                       if(city1==city2){ 
+                          System.out.println("A city cannot have a distance.");
+                          break;
+        }              System.out.print("Enter the distance between city " + city1 + " and city " + city2 + ": ");
+                       int dis=input.nextInt();
+                       
+                       distance[city1][city2]=dis;
+                       distance[city2][city1]=dis;
+                       System.out.println("Distance updated.");
+                       break;
+                    
+                    case 2:
+                       System.out.println("====Distance table====");
+                       System.out.println("                ");
+                       for(int k=0; k<MAX_CITIES; k++){
+                          System.out.printf("%10s","City"+k);
+                          for(int r=0; r<MAX_CITIES; r++){
+                             if(distance[k][r]==-1){
+                                System.out.printf("%10s","-");
+                            }else{
+                                System.out.printf("%10d", distance[k][r]);
+                                }
+                        }       System.out.println();
+                       } break;
+                    default:
+                        System.out.println("Invalid choice.");
+                     }
+        
+                   }
+                } 
+             }
+        
+                
+            
+        
+
+    
             
             
         
