@@ -305,13 +305,28 @@ public class LogisticsManagementSystem {
                 public ArrayList<Delivery>getDeliveries(){return deliveries;}
             }
             public class Delivery{
-
-                public Delivery(int sci, int dsi, double weight, int vehicleindex, int distance, double total_cost, double profit, double final_customer_charge, double delivery_time) {
-
-                }
                 
+                private int sci,dsi,vehicleindex;
+                private double weight,distance,total_cost,profit,final_customer_charge,delivery_time;
+                
+                public Delivery(int sci, int dsi, double weight, int vehicleindex, int distance, double total_cost, double profit, double final_customer_charge, double delivery_time) {
+                      this.sci=sci;
+                      this.dsi=dsi;
+                      this.weight=weight;
+                      this.vehicleindex=vehicleindex;
+                      this.distance=distance;
+                      this.total_cost=total_cost;
+                      this.profit=profit;
+                      this.final_customer_charge=final_customer_charge;
+                      this.delivery_time=delivery_time;
+                }
+                public double getdistance(double distance){return distance;}
+                public double getprofit(double profit){return profit;}
+                public double getcharge(double final_customer_charge){return final_customer_charge;}
+                public double getdeliverytime(double delivery_time){return delivery_time;}
             }
             }
+            
              
             
                 
