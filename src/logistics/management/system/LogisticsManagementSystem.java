@@ -77,7 +77,6 @@ public class LogisticsManagementSystem {
     }
 
    
-
     public class CityManager {
 
         private ArrayList<String> cities;
@@ -162,7 +161,7 @@ public class LogisticsManagementSystem {
    }
         public class DistanceManager{
             public void menu(CityManager cityManager){
-               private int MAX_CITIES=30;
+               private final int MAX_CITIES=30;
                private int[][] distance=new int[ MAX_CITIES][ MAX_CITIES];
                private Scanner input=new Scanner(System.in);
             
@@ -279,8 +278,38 @@ public class LogisticsManagementSystem {
                     double avgspeed=vehicleManager.getAvgspeed(vehicleindex);
                     double efficiencies=vehicleManager.getEfficiency(vehicleindex);
                     
+                    double delivery_cost=distance*rate*(1+weight/10000);
+                    double delivery_time=distance/avgspeed;
+                    double fuel_consumption=distance/efficiencies;
+                    double fuel_cost=fuel_consumption*fuel_price;
+                    double total_cost=delivery_cost+fuel_cost;
+                    double profit=delivery_cost*0.25;
+                    double final_customer_charge=total_cost+profit;
                     
-                }  
+                    System.out.println("\n====DELIVERY SUMMARY====");
+                    System.out.println("From: "+cityManager.getCities().get(sci));
+                    System.out.println("To: "+cityManager.getCities().get(dsi));
+                    System.out.println("Distance: "+distance+"km");
+                    System.out.println("Vehicle: "+vehicleManager.getVehiclestype(vehicleindex));
+                    System.out.println("Base cost: "+delivery_cost+"LKR");
+                    System.out.println("Fuel used: "+fuel_consumption);
+                    System.out.println("Fuel cost: "+fuel_cost+"LKR");
+                    System.out.println("Operational Cost: "+total_cost+"LKR");
+                    System.out.println("Profit: "+profit+"LKR");
+                    System.out.println("Customer Charge: "+final_customer_charge+"LKR");
+                    System.out.println("Estimated Time: "+delivery_time+"hours");
+                    
+                    deliveries.add(new Delivery(sci,dsi,weight,vehicleindex,distance,total_cost,profit,final_customer_charge,delivery_time));
+                    
+                } 
+                public ArrayList<Delivery>getDeliveries(){return deliveries;}
+            }
+            public class Delivery{
+
+                public Delivery(int sci, int dsi, double weight, int vehicleindex, int distance, double total_cost, double profit, double final_customer_charge, double delivery_time) {
+
+                }
+                
             }
             }
              
