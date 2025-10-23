@@ -320,10 +320,45 @@ public class LogisticsManagementSystem {
                       this.final_customer_charge=final_customer_charge;
                       this.delivery_time=delivery_time;
                 }
-                public double getdistance(double distance){return distance;}
-                public double getprofit(double profit){return profit;}
-                public double getcharge(double final_customer_charge){return final_customer_charge;}
-                public double getdeliverytime(double delivery_time){return delivery_time;}
+                public double getDistance(){return distance;}
+                public double getProfit(){return profit;}
+                public double getCharge(){return final_customer_charge;}
+                public double getDeliverytime(){return delivery_time;}
+            }
+            public class ReportManager{
+               private final DeliveryManager deliveryManager;
+               public ReportManager(DeliveryManager dm, DeliveryManager deliverymanager){
+                  this.deliveryManager= deliverymanager;  
+               }
+               public void showReports(){
+                   ArrayList<Delivery> deliveries = deliveryManager.getDeliveries();
+                   
+                   double totaldis=0;
+                   double totalprofit=0;
+                   double totalrvn=0;
+                   double totaltime=0;
+                   double maxdis=0;
+                   double mindis=0;
+                   
+                   for(Delivery d:deliveries){
+                       totaldis += d.getDistance();
+                       totalprofit += d.getProfit();
+                       totalrvn += d.getCharge();
+                       totaltime += d.getDeliverytime();
+                       
+                       if(d.getDistance()>maxdis)maxdis=d.getDistance();
+                       if(d.getDistance()<mindis)mindis=d.getDistance();
+                       
+                   }
+                   System.out.println("\n====Delivery Report====");
+                   System.out.println("Total deliveries: "+deliveries.size());
+                   System.out.println("Total distance: "+totaldis+"km");
+                   System.out.println("Average deliverytime: "+(totaltime/deliveries.size())+"hours");
+                   System.out.println("Total revenue: "+totalrvn+"LKR");
+                   System.out.println("Total profit: "+totalprofit+"LKR");
+                   System.out.println("Longest route: "+maxdis+"km");
+                   System.out.println("Shortest route: "+mindis+"km");
+               }
             }
             }
             
