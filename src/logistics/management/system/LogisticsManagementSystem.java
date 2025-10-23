@@ -443,7 +443,24 @@ public class LogisticsManagementSystem {
                     }
                 }
             }
-            
+            public class FileHandler{
+                
+                private CityManager cityManager;
+                private DistanceManager distanceManager;
+                private DeliveryManager deliveryManager;
+                
+                public FileHandler(CityManager citymanager,DistanceManager distancemanager, DeliveryManager deliverymanager){
+                    this.cityManager=citymanager;
+                    this.distanceManager = distancemanager;
+                    this.deliveryManager = deliverymanager;    
+                }
+                public void loadData(){
+                    
+                }
+                public void saveData(){
+                    
+                }
+            }
         }
         
             
