@@ -6,6 +6,7 @@ package logistics.management.system;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
    
@@ -42,7 +43,8 @@ public class LogisticsManagementSystem {
             System.out.println("3. View Vehicles");
             System.out.println("4. Delivery request");
             System.out.println("5. Reports");
-            System.out.println("6. Save");
+            System.out.println("6. find least-cost route");
+            System.out.println("7.save");
             System.out.print("Choose an option: ");
 
          int option = input.nextInt();
@@ -58,12 +60,22 @@ public class LogisticsManagementSystem {
                     vehicleManager.showVehicles();
                     break;
                 case 4:
-                    deliveryManager.handleDelivery(cityManager);
+                    deliveryManager.deliveryHandle(cityManager);
                     break;
                 case 5:
                     reportManager.showReports();
                     break;
                 case 6:
+                    RouteFinder routeFinder = new RouteFinder(distanceManager);
+                    cityManager.listCities();
+                    System.out.println("Enter up to 4 city indexes separated by spaces:");
+                    input.nextLine(); 
+                    String[] parts = input.nextLine().split(" ");
+                    ArrayList<Integer> selectedCities = new ArrayList<>();
+                    for (String p : parts) selectedCities.add(Integer.parseInt(p));
+                    routeFinder.findBestroute(selectedCities, cityManager);
+                    break;
+                case 7:
                     fileHandler.saveData();
                     System.out.println("Data saved.");
                     run = false;
@@ -130,57 +142,67 @@ public class LogisticsManagementSystem {
 
             private void renameCity() {
                
-               System.out.print("Enter the index no of city to rename: ");
-               int index = input.nextInt();
+               System.out.print("Enter the id no of city to rename: ");
+               int id = input.nextInt();
                input.nextLine();
-               if (index >= 0 && index < cities.size()) {
+               if (id >= 0 && id < cities.size()) {
                System.out.print("Enter new name: ");
-               cities.set(index, input.nextLine());
+               cities.set(id, input.nextLine());
                System.out.println("City renamed.");
                } else {
-               System.out.println("Invalid index no.");
+               System.out.println("Invalid id no.");
           }
       }
 
             private void removeCity() {
                 
-                System.out.print("Enter the index no of city to remove: ");
-                int index = input.nextInt();
-                if (index >= 0 && index < cities.size()) {
-                    cities.remove(index);
+                System.out.print("Enter the id no of city to remove: ");
+                int id = input.nextInt();
+                if (id >= 0 && id < cities.size()) {
+                    cities.remove(id);
                     System.out.println("City removed.");
                 } else {
-                    System.out.println("Invalid index no.");
-          }
+                    System.out.println("Invalid id no.");
+            }
       }
           
 
             public ArrayList<String> getCities() {
                 return cities;
     }
+
+            private void listCities() {
+                System.out.println("\n===Cities===");
+                for(int c=0; c<cities.size(); c++){
+                    System.out.println(c+":"+cities.get(c));
+                }
+            }
    }
         public class DistanceManager{
             public void menu(CityManager cityManager){
                private final int MAX_CITIES=30;
                private int[][] distance=new int[ MAX_CITIES][ MAX_CITIES];
                private Scanner input=new Scanner(System.in);
+
+            public int getDistance(int sci, int dsi) {
+        
             
-            for(int i=0; i<MAX_CITIES; i++){
-               for(int j=0; j<MAX_CITIES; j++){
-                  if(i==j){
-                     distance[i][j]=0;
-                  }else{
-                     distance[i][j]=-1;
-                  }
-                }}
-            while(true){
-                System.out.println("\n====Distance Manager====");
-                System.out.println("1.Disatance between 2 cities");
-                System.out.println("2.Show the distance table");
-                System.out.println("Choose an option");
-                int option=input.nextInt();
+                for(int i=0; i<MAX_CITIES; i++){
+                    for(int j=0; j<MAX_CITIES; j++){
+                        if(i==j){
+                           distance[i][j]=0;
+                        }else{
+                           distance[i][j]=-1;
+                        }
+                    }}
+                while(true){
+                  System.out.println("\n====Distance Manager====");
+                  System.out.println("1.Disatance between 2 cities");
+                  System.out.println("2.Show the distance table");
+                  System.out.println("Choose an option");
+                  int option=input.nextInt();
             
-                switch(option){
+                  switch(option){
                     case 1:
                        System.out.println("Enter the 1st city index(0 - "+(MAX_CITIES-1)+"):");
                        int city1=input.nextInt();
@@ -213,8 +235,9 @@ public class LogisticsManagementSystem {
                     default:
                         System.out.println("Invalid option.");
                      }
-        
-                   }
+                    }
+                   }public int getDistance(int city1, int city2, int[][] distance) {
+                         return distance[city1][city2];
                 } 
             public class VehicleManager{
             
@@ -253,7 +276,9 @@ public class LogisticsManagementSystem {
                     vehicleManager = vehicleManagerParam;
                     deliveries = new ArrayList<>();
                 }
-                public void deliveryHandle(CityManager cityManager){
+                
+                public void deliveryHandle(CityManager cityManager) {
+            
                     System.out.println("Enter source city index: ");
                     int sci=input.nextInt();
                     System.out.println("Enter destination city index: ");
@@ -324,6 +349,7 @@ public class LogisticsManagementSystem {
                 public double getProfit(){return profit;}
                 public double getCharge(){return final_customer_charge;}
                 public double getDeliverytime(){return delivery_time;}
+
             }
             public class ReportManager{
                private final DeliveryManager deliveryManager;
@@ -360,7 +386,66 @@ public class LogisticsManagementSystem {
                    System.out.println("Shortest route: "+mindis+"km");
                }
             }
+            public class RouteFinder{
+                
+                private DistanceManager distanceManager;
+                
+                public RouteFinder(DistanceManager distancemanager){
+                    this.distanceManager=distancemanager;
+                }
+                public void findBestroute(ArrayList<Integer> cityIds,CityManager cityManager, Iterable<ArrayList<Integer>> allroutes){
+                
+                    int beginCity=cityIds.get(0);
+                    ArrayList<Integer> otherCities=new ArrayList<>(cityIds.subList(1,cityIds.size()));
+                    
+                    ArrayList<Integer> bestRoute=null;
+                    int bestDistance=Integer.MAX_VALUE;
+                    
+                    ArrayList<ArrayList<Integer>> allRoutes=generate_permutations(otherCities);
+                    
+                    for(ArrayList<Integer> route:allroutes){
+                       int totaldis=0;
+                       int presentCity=beginCity;
+                       
+                       for(int nextCity:route){
+                         totaldis += DistanceManager.getDistance(presentCity,nextCity);
+                         }
+                         totaldis += DistanceManager.getDistance(presentCity,beginCity);
+                    
+                         if(totaldis < bestDistance){
+                           bestDistance=totaldis;
+                           bestRoute=new ArrayList<>(route);
+                       }
+                    }
+                    System.out.println("\n===LEAST-COST ROUTE");
+                    System.out.print(cityManager.getCities().get(beginCity));
+                    
+                    for(int city:bestRoute){
+                        System.out.print("->"+cityManager.getCities().get(city));
+                    }
+                    System.out.println("->"+cityManager.getCities().get(beginCity));
+                    System.out.println("Total distance: "+bestDistance+"km");
+                }
+                private ArrayList<ArrayList<Integer>> generate_permutations(ArrayList<Integer> cities) {
+                    ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+                    permutate(cities, 0, result);
+                    return result;
+                }
+                private void permutate(ArrayList<Integer> cities, int begin,ArrayList<ArrayList<Integer>>result){
+                    if(begin==cities.size()-1){
+                        result.add(new ArrayList<>(cities));
+                        return;
+                    }
+                    for(int b=begin; b<cities.size(); b++){
+                        Collections.swap(cities, b, begin);
+                        permutate(cities, begin+1, result);
+                        Collections.swap(cities, b, begin);
+                    }
+                }
             }
+            
+        }
+        
             
              
             
