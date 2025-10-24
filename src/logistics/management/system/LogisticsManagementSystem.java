@@ -5,9 +5,12 @@
 package logistics.management.system;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+import java.io.PrintWriter;
 
    
 /**
@@ -26,7 +29,7 @@ public class LogisticsManagementSystem {
         CityManager cityManager = new CityManager();
         DistanceManager distanceManager = new DistanceManager();
         VehicleManager vehicleManager = new VehicleManager();
-        Delivery deliveryManager = new DeliveryManager(distanceManager, vehicleManager);
+        DeliveryManager deliveryManager = new DeliveryManager(distanceManager, vehicleManager);
         ReportManager reportManager = new ReportManager(deliveryManager);
         FileHandler fileHandler = new FileHandler(cityManager, distanceManager, deliveryManager);
 
@@ -86,10 +89,10 @@ public class LogisticsManagementSystem {
         }
 
         input.close();
-    }
-
-   
-    public class CityManager {
+       } 
+    
+    
+    public static class CityManager {
 
         private ArrayList<String> cities;
         private final int MAX_CITIES = 30;
@@ -169,17 +172,18 @@ public class LogisticsManagementSystem {
 
             public ArrayList<String> getCities() {
                 return cities;
-    }
+            }
 
-            private void listCities() {
+            public void listCities() {
                 System.out.println("\n===Cities===");
                 for(int c=0; c<cities.size(); c++){
                     System.out.println(c+":"+cities.get(c));
                 }
             }
-   }
-        public class DistanceManager{
-            public void menu(CityManager cityManager){
+   
+        
+
+        public static class DistanceManager{
                private final int MAX_CITIES=30;
                private int[][] distance=new int[ MAX_CITIES][ MAX_CITIES];
                private Scanner input=new Scanner(System.in);
@@ -239,7 +243,13 @@ public class LogisticsManagementSystem {
                    }public int getDistance(int city1, int city2, int[][] distance) {
                          return distance[city1][city2];
                 } 
-            public class VehicleManager{
+        }
+        private void setDistance(int i, int j, int distance) {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+        }      
+            
+            private static  class VehicleManager{
             
                 private String[] vehicles={"Van","Track","Lorry"};
                 private int[] capacities={1000,5000,10000};
@@ -261,8 +271,9 @@ public class LogisticsManagementSystem {
                 public double getEfficiency(int index){return efficiencies[index];}
                 public String getVehiclestype(int index){return vehicles[index];}
               }
-            
-            public class DeliveryManager{
+
+
+            public static class DeliveryManager{
                 
                 private final int MAX_DELIVERY=50;
                 private ArrayList<Delivery> deliveries;
@@ -329,16 +340,18 @@ public class LogisticsManagementSystem {
                 } 
                 public ArrayList<Delivery>getDeliveries(){return deliveries;}
             }
-            public class Delivery{
+           
+
+            public static class Delivery{
                 
-                private int sci,dsi,vehicleindex;
+                private int sci,dsi,vehicleid;
                 private double weight,distance,total_cost,profit,final_customer_charge,delivery_time;
                 
-                public Delivery(int sci, int dsi, double weight, int vehicleindex, int distance, double total_cost, double profit, double final_customer_charge, double delivery_time) {
+                public Delivery(int sci, int dsi, double weight, int vehicleid, int distance, double total_cost, double profit, double final_customer_charge, double delivery_time) {
                       this.sci=sci;
                       this.dsi=dsi;
                       this.weight=weight;
-                      this.vehicleindex=vehicleindex;
+                      this.vehicleid=vehicleid;
                       this.distance=distance;
                       this.total_cost=total_cost;
                       this.profit=profit;
@@ -349,11 +362,18 @@ public class LogisticsManagementSystem {
                 public double getProfit(){return profit;}
                 public double getCharge(){return final_customer_charge;}
                 public double getDeliverytime(){return delivery_time;}
-
+                public int getSci(){return sci;}
+                public int getDsi(){return dsi;}
+                public double getWeight(){return weight;}
+                public int getVehicleid(){return vehicleid;}
+                public double getTotal_cost(){return total_cost;}
+                
             }
+        
             public class ReportManager{
                private final DeliveryManager deliveryManager;
-               public ReportManager(DeliveryManager dm, DeliveryManager deliverymanager){
+               
+               public ReportManager(DeliveryManager deliverymanager){
                   this.deliveryManager= deliverymanager;  
                }
                public void showReports(){
@@ -385,8 +405,9 @@ public class LogisticsManagementSystem {
                    System.out.println("Longest route: "+maxdis+"km");
                    System.out.println("Shortest route: "+mindis+"km");
                }
-            }
-            public class RouteFinder{
+            
+
+            public  static class RouteFinder{
                 
                 private DistanceManager distanceManager;
                 
@@ -408,9 +429,9 @@ public class LogisticsManagementSystem {
                        int presentCity=beginCity;
                        
                        for(int nextCity:route){
-                         totaldis += DistanceManager.getDistance(presentCity,nextCity);
+                         totaldis += distanceManager.getDistance(presentCity,nextCity);
                          }
-                         totaldis += DistanceManager.getDistance(presentCity,beginCity);
+                         totaldis += distanceManager.getDistance(presentCity,beginCity);
                     
                          if(totaldis < bestDistance){
                            bestDistance=totaldis;
@@ -442,27 +463,136 @@ public class LogisticsManagementSystem {
                         Collections.swap(cities, b, begin);
                     }
                 }
-            }
-            public class FileHandler{
-                
+            public class FileHandler {
+
                 private CityManager cityManager;
                 private DistanceManager distanceManager;
                 private DeliveryManager deliveryManager;
+
+                public FileHandler(CityManager cm, DistanceManager dm, DeliveryManager del) {
+                    this.cityManager = cm;
+                    this.distanceManager = dm;
+                    this.deliveryManager = del;
+                }
+
+                public void loadData() {
+                    loadCitiesAndDistances();
+                    loadDeliveries();
+                 }
+
+                public void saveData() {
+                    saveCitiesAndDistances();
+                    saveDeliveries();
+                }
+
+                private void loadCitiesAndDistances() {
+                    try (Scanner file = new Scanner(new File("routes.txt"))) {
+                        ArrayList<String> cities = cityManager.getCities();
+
+                        cities.clear();
+ 
+                        int cityCount = Integer.parseInt(file.nextLine().trim());
+
+                        for (int i = 0; i < cityCount; i++) {
+                           if (file.hasNextLine()) {
+                               cities.add(file.nextLine().trim());
+                            }
+                        }
+
+                        for (int i = 0; i < cityCount; i++) {
+                           if (file.hasNextLine()) {
+                               String[] distRow = file.nextLine().trim().split(",");
+                               for (int j = 0; j < cityCount; j++) {
+                                   int distance = Integer.parseInt(distRow[j]);
+                                   distanceManager.setDistance(i, j, distance);
+                                 }
+                            }
+                        }
+
+                        System.out.println("Cities and distances loaded successfully.");
+
+                        } catch (FileNotFoundException e) {
+                            System.out.println("routes.txt not found. Starting with empty data.");
+                        } catch (Exception e) {
+                            System.out.println("Error loading cities/distances: " + e.getMessage());
+                        }
+                    }
+
+                private void saveCitiesAndDistances() {
+                     try (PrintWriter writer = new PrintWriter("routes.txt")) {
+                         ArrayList<String> cities = cityManager.getCities();
+                         int cityCount = cities.size();
+
+                         writer.println(cityCount);
+
+                         for (String city : cities) {
+                           writer.println(city);
+                        }
+
+                        for (int i = 0; i < cityCount; i++) {
+                           for (int j = 0; j < cityCount; j++) {
+                           writer.print(distanceManager.getDistance(i, j));
+                               if (j < cityCount - 1) writer.print(",");
+                              }
+                              writer.println();
+                             }
+
+                             System.out.println("Cities and distances saved successfully.");
+
+                           } catch (Exception e) {
+                           System.out.println("Error saving cities/distances: " + e.getMessage());
+                           }
+                        }
+
+                private void loadDeliveries() {
+                       try (Scanner file = new Scanner(new File("deliveries.txt"))) {
+
+                       deliveryManager.getDeliveries().clear();
+
+                       while (file.hasNextLine()) {
+                           String line = file.nextLine();
+                           String[] parts = line.split(",");
+
+                            int city1 = Integer.parseInt(parts[0]);
+                            int city2 = Integer.parseInt(parts[1]);
+                            double weight = Double.parseDouble(parts[2]);
+                            int vehicleId = Integer.parseInt(parts[3]);
+                            double distance = Double.parseDouble(parts[4]);
+                            double totalCost = Double.parseDouble(parts[5]);
+                            double profit = Double.parseDouble(parts[6]);
+                            double charge = Double.parseDouble(parts[7]);
+                            double time = Double.parseDouble(parts[8]);
+
+                            deliveryManager.getDeliveries().add(
+                            new Delivery(city1, city2, weight, vehicleId, (int) distance, totalCost, profit, charge, time));
                 
-                public FileHandler(CityManager citymanager,DistanceManager distancemanager, DeliveryManager deliverymanager){
-                    this.cityManager=citymanager;
-                    this.distanceManager = distancemanager;
-                    this.deliveryManager = deliverymanager;    
-                }
-                public void loadData(){
-                    
-                }
-                public void saveData(){
-                    
-                }
-            }
+                           }
+
+                           System.out.println("Deliveries successfully loaded.");
+
+                           } catch (FileNotFoundException e) {
+                            System.out.println("deliveries.txt not found. No deliveries loaded.");
+                           } catch (Exception e) {
+                             System.out.println("Error loading deliveries: " + e.getMessage());
+                           }
+                        }
+
+                private void saveDeliveries() {
+                      try (PrintWriter writer = new PrintWriter("deliveries.txt")) {
+                          for (Delivery d : deliveryManager.getDeliveries()) {
+                             writer.printf("%d,%d,%.2f,%d,%.2f,%.2f,%.2f,%.2f,%.2f\n",
+                             d.getSci(), d.getSci(), d.getWeight(), d.getVehicleid(),
+                             d.getDistance(), d.getTotal_cost(), d.getProfit(), d.getCharge(), d.getDeliverytime());
+                             }
+                             System.out.println("Deliveries successfully saved..");
+                             } catch (Exception e) {
+                             System.out.println("Error saving deliveries: " + e.getMessage());
         }
-        
+    }
+}
+            
+         
+    
             
              
             
