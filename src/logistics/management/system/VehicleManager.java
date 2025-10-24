@@ -8,9 +8,9 @@ package logistics.management.system;
  *
  * @author dhana
  */
-class cityManager {
+class VehicleManager {
 
-    static Iterable<String> getCities() {
+    void showVehicles() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
