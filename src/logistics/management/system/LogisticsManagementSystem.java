@@ -17,7 +17,6 @@ import java.io.PrintWriter;
  * @author dhana
  */
 public class LogisticsManagementSystem {
-    static ReportManager reportManager;
     /**
      * @param args the command line arguments
      */
@@ -29,7 +28,7 @@ public class LogisticsManagementSystem {
         DistanceManager distanceManager = new DistanceManager();
         VehicleManager vehicleManager = new VehicleManager();
         DeliveryManager deliveryManager = new DeliveryManager(distanceManager, vehicleManager);
-        Report Manager reportManager = new ReportManager(deliveryManager);
+        ReportManager reportManager = new ReportManager(deliveryManager);
         FileHandler fileHandler = new FileHandler(cityManager, distanceManager, deliveryManager);
 
         fileHandler.loadData();
@@ -424,7 +423,7 @@ public class LogisticsManagementSystem {
 
         }
 
-        public class ReportManager {
+        public static class ReportManager {
 
             private DeliveryManager deliveryManager;
 
@@ -465,8 +464,8 @@ public class LogisticsManagementSystem {
                 System.out.println("Longest route: " + maxdis + "km");
                 System.out.println("Shortest route: " + mindis + "km");
             }
-
-            public static class RouteFinder {
+        }
+        public static class RouteFinder {
 
                 private DistanceManager distanceManager;
 
@@ -474,7 +473,7 @@ public class LogisticsManagementSystem {
                     this.distanceManager = distancemanager;
                 }
 
-                public void findBestroute(ArrayList<Integer> cityIds, CityManager cityManager, Iterable<ArrayList<Integer>> allroutes) {
+                public void findBestroute(ArrayList<Integer> cityIds, CityManager cityManager) {
 
                     int beginCity = cityIds.get(0);
                     ArrayList<Integer> otherCities = new ArrayList<>(cityIds.subList(1, cityIds.size()));
@@ -484,14 +483,14 @@ public class LogisticsManagementSystem {
 
                     ArrayList<ArrayList<Integer>> allRoutes = generate_permutations(otherCities);
 
-                    for (ArrayList<Integer> route : allroutes) {
+                    for (ArrayList<Integer> route : allRoutes) {
                         int totaldis = 0;
                         int presentCity = beginCity;
 
                         for (int nextCity : route) {
                             totaldis += distanceManager.getDistance(presentCity, nextCity);
-                        }
-                        totaldis += distanceManager.getDistance(presentCity, beginCity);
+                            }
+                            totaldis += distanceManager.getDistance(presentCity, beginCity);
 
                         if (totaldis < bestDistance) {
                             bestDistance = totaldis;
@@ -527,7 +526,7 @@ public class LogisticsManagementSystem {
                 }
             }
 
-            public class FileHandler {
+            public static class FileHandler {
 
                 private CityManager cityManager;
                 private DistanceManager distanceManager;
@@ -657,4 +656,3 @@ public class LogisticsManagementSystem {
                 }
             }
         }
-    }
