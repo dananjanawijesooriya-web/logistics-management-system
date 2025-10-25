@@ -18,6 +18,10 @@ public class FileHandler {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    FileHandler(LogisticsManagementSystem.CityManager cityManager, LogisticsManagementSystem.DistanceManager distanceManager, LogisticsManagementSystem.DeliveryManager deliveryManager) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     void saveData() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
